@@ -29,9 +29,9 @@ composer require jbsnewmedia/css-purger
 ## 🔧 Usage
 
 ```php
-use JBSNewMedia\CssPurger\CssPurgerBootstrap;
+use JBSNewMedia\CssPurger\Vendors\Bootstrap;
 
-$purger = new CssPurgerBootstrap('./assets/css/bootstrap.css');
+$purger = new Bootstrap('./assets/css/bootstrap.css');
 
 $purger->loadContent();
 $purger->prepareContent();
