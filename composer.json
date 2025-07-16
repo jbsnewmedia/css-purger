@@ -1,0 +1,30 @@
+{
+  "name": "jbsnewmedia/css-purger",
+  "description": "A lightweight PHP library to purge unused CSS rules from stylesheets based on defined selectors.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "JBS New Media",
+      "email": "info@jbs-newmedia.com",
+      "homepage": "https://github.com/jbsnewmedia"
+    }
+  ],
+  "require": {
+    "php": ">=7.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "JBSNewMedia\\CssPurger\\": "src/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.0"
+  },
+  "scripts": {
+    "test": "phpunit"
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "keywords": ["css", "purge", "clean", "optimizer", "php", "bootstrap", "minify"]
+}

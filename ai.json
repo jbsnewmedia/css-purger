@@ -1,0 +1,10 @@
+{
+  "include": {
+    "extensions": ["php", "css"],
+    "folders": [],
+    "filenames": []
+  },
+  "exclude": {
+    "filenames": ["bootstrap.css"]
+  }
+}
