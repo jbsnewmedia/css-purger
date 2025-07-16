@@ -1,8 +1,10 @@
 <?php
 
-namespace JbsNewMedia\CssPurger;
+namespace JBSNewMedia\CssPurger\Vendors;
 
-class CssPurgerBootstrap extends CssPurger
+use JBSNewMedia\CssPurger\CssPurger;
+
+class Bootstrap extends CssPurger
 {
 
     public function prepareContent():self
