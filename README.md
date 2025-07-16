@@ -1,7 +1,3 @@
-Hier ist die **aktualisierte englische README** für dein `jbsnewmedia/css-purger` Composer-Paket – mit korrektem Handling von `:hover` & Co:
-
----
-
 # CssPurger
 
 **CssPurger** is a lightweight PHP library to remove unused CSS rules from large stylesheets. It’s perfect for optimizing CSS frameworks like Bootstrap based on actual usage in your project.
