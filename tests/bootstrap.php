@@ -1,12 +1,12 @@
 <?php
 
 include '../src/CssPurger.php';
-include '../src/vendors/Bootstrap.php';
+include '../src/Vendors/Bootstrap.php';
 
-use JbsNewMedia\CssPurger\CssPurgerBootstrap;
+use JBSNewMedia\CssPurger\Vendors\Bootstrap;
 
 $file = realpath('./assets/css/bootstrap.css');
-$cssService = new CssPurgerBootstrap($file);
+$cssService = new Bootstrap($file);
 $cssService->loadContent();
 $cssService->prepareContent();
 $cssService->runContent();
