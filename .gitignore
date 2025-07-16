@@ -1,3 +1,5 @@
 /ai.txt
 /.idea
 /.git
+/tests/assets/css/bootstrap-purged.css
+/tests/assets/css/bootstrap-purged.min.css
