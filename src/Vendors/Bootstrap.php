@@ -14,6 +14,7 @@ class Bootstrap extends CssPurger
 
         $this->addSelectors([
             ':root',
+            '*',
             '[data-bs-theme=light]',
             '[data-bs-theme=dark]',
         ]);
