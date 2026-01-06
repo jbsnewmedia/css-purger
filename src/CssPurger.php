@@ -101,6 +101,16 @@ class CssPurger
 
     public function runContent(): self
     {
+        if (strpos($this->content, '@charset') !== false) {
+            $this->cssBlockPrefix = substr($this->content, 0, strpos($this->content, ';') + 1);
+            $this->content = substr($this->content, strpos($this->content, ';') + 1);
+        }
+
+        if (strpos(trim($this->content), '/*') === 0) {
+            $this->cssBlockPrefix .= substr($this->content, 0, strpos($this->content, '*/') + 2);
+            $this->content = substr($this->content, strpos($this->content, '*/') + 2);
+        }
+
         $matches = explode("\n}\n", $this->content);
         unset($matches[0]);
 
@@ -170,7 +180,15 @@ class CssPurger
         $this->checkSelectors();
 
         $output = '';
-        $output .= $this->cssBlockPrefix;
+
+        $header = '/* Purged by CssPurger (https://jbs-newmedia.de/css-purger) - MIT License - JBS New Media GmbH, Juergen Schwind */'."\n";
+
+        if (strpos($this->cssBlockPrefix, '@charset') !== false) {
+            $output .= preg_replace('/(@charset [^;]+;)/', '$1'."\n".$header, $this->cssBlockPrefix);
+        } else {
+            $output .= $header.$this->cssBlockPrefix;
+        }
+
         foreach ($this->cssBlocks as $v) {
             if (isset($v['level'])) {
                 if ($min) {
