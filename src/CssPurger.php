@@ -279,21 +279,52 @@ class CssPurger
 
     protected function checkSelectorToRemove(string $selector):bool
     {
-        if ((strpos($selector, ':') !== false) && (strpos($selector, ':') > 0)) {
-            $selector = trim(substr($selector, 0, strpos($selector, ':')));
+        $selector = trim($selector);
+        if ($selector === '') {
+            return false;
         }
 
-        if (strpos($selector, '>')) {
-            $selector = trim(substr($selector, 0, strpos($selector, '>')));
-        }
-
-        foreach ($this->cssSelectors as $selectorCheck) {
-            if ($selector == $selectorCheck) {
-
-                return true;
+        // Handle multiple selectors joined by space, >, +, ~
+        // We split by these combinators and check if each part is "valid"
+        $parts = preg_split('/[\s>+~]+/', $selector, -1, PREG_SPLIT_NO_EMPTY);
+        foreach ($parts as $part) {
+            if (!$this->checkSingleSelector($part)) {
+                return false;
             }
         }
 
+        return true;
+    }
+
+    protected function checkSingleSelector(string $selector): bool
+    {
+        // Remove pseudo-classes/elements
+        if (($pos = strpos($selector, ':')) !== false && $pos > 0) {
+            $selector = substr($selector, 0, $pos);
+        }
+
+        // Handle multiple classes on same element: .class1.class2
+        // We split by . and check each class
+        if (str_contains($selector, '.') && strlen($selector) > 1 && $selector[0] === '.') {
+            $classes = explode('.', ltrim($selector, '.'));
+            foreach ($classes as $class) {
+                if (!$this->isSelectorInList('.' . $class)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        return $this->isSelectorInList($selector);
+    }
+
+    protected function isSelectorInList(string $selector): bool
+    {
+        foreach ($this->cssSelectors as $selectorCheck) {
+            if ($selector === $selectorCheck) {
+                return true;
+            }
+        }
         return false;
     }
 
