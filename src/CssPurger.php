@@ -111,22 +111,23 @@ class CssPurger
             $this->content = substr($this->content, strpos($this->content, '*/') + 2);
         }
 
-        $matches = explode("\n}\n", $this->content);
-        unset($matches[0]);
-
+        $matches = explode("\n}\n", trim($this->content));
         $this->cssBlocks = [];
         foreach ($matches as $k => $v) {
-            $matches[$k] = trim($v . "\n}\n");
-            $key = $this->cleanSelector(substr($matches[$k], 0, strpos($matches[$k], '{')));
+            $v = trim($v);
+            if (empty($v)) continue;
+            
+            $v .= "\n}\n";
+            $key = $this->cleanSelector(substr($v, 0, strpos($v, '{')));
 
-            if (substr($key, 0, 1) == '@') {
-                $levelDown = $this->processNestedBlocks($matches[$k]);
+            if (substr($key, 0, 1) == '@' && strpos($key, '@font-face') === false) {
+                $levelDown = $this->processNestedBlocks($v);
                 $this->cssBlocks[$k] = [
                     'selector' => $this->extractSelectors($key),
                     'level' => $levelDown,
                 ];
             } else {
-                $properties = $this->extractProperties($matches[$k]);
+                $properties = $this->extractProperties($v);
                 $this->cssBlocks[$k] = [
                     'selector' => $this->extractSelectors($key),
                     'properties' => $properties,
@@ -153,26 +154,41 @@ class CssPurger
 
     protected function extractProperties(string $block): array
     {
-        $properties = explode(';', substr($block, strpos($block, '{') + 1));
-        return array_filter(array_map('trim', $properties), fn($prop) => !empty($prop) && $prop !== '}');
+        $propertiesContent = substr($block, strpos($block, '{') + 1);
+        $propertiesContent = trim($propertiesContent);
+        if (substr($propertiesContent, -1) === '}') {
+            $propertiesContent = substr($propertiesContent, 0, -1);
+        }
+        $propertiesContent = trim($propertiesContent);
+        
+        $properties = explode(';', $propertiesContent);
+        $properties = array_filter(array_map('trim', $properties), fn($prop) => !empty($prop));
+        
+        return $properties;
     }
 
     protected function processNestedBlocks(string $block): array
     {
-        $levelDown = explode("}\n", substr($block, strpos($block, '{') + 1));
-        unset($levelDown[count($levelDown) - 1]);
+        $content = trim(substr($block, strpos($block, '{') + 1));
+        $content = substr($content, 0, -1); // Remove last }
+        
+        $levelDown = explode("}\n", $content);
+        $result = [];
 
-        foreach ($levelDown as $kk => $vv) {
-            $levelDown[$kk] = trim($vv . "\n}\n");
-            $keyDown = $this->cleanSelector(substr($levelDown[$kk], 0, strpos($levelDown[$kk], '{')));
-            $properties = $this->extractProperties($levelDown[$kk]);
-            $levelDown[$kk] = [
+        foreach ($levelDown as $vv) {
+            $vv = trim($vv);
+            if (empty($vv)) continue;
+            
+            $vv .= "\n}\n";
+            $keyDown = $this->cleanSelector(substr($vv, 0, strpos($vv, '{')));
+            $properties = $this->extractProperties($vv);
+            $result[] = [
                 'selector' => $this->extractSelectors($keyDown),
                 'properties' => $properties,
             ];
         }
 
-        return $levelDown;
+        return $result;
     }
 
     public function generateOutput(bool $min = true): string

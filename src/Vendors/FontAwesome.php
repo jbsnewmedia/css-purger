@@ -21,6 +21,8 @@ class FontAwesome extends CssPurger
             '.fa-classic',
             '.fa-sharp',
             '.fa-sharp-duotone',
+            ':host',
+            '@font-face',
         ]);
 
         return $this;
