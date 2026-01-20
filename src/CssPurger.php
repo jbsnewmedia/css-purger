@@ -154,7 +154,13 @@ class CssPurger
     protected function extractProperties(string $block): array
     {
         $properties = explode(';', substr($block, strpos($block, '{') + 1));
-        return array_filter(array_map('trim', $properties), fn($prop) => !empty($prop) && $prop !== '}');
+        return array_filter(array_map(function($prop) {
+            $prop = trim($prop);
+            if (substr($prop, -1) === ':') {
+                return $prop . ' ';
+            }
+            return $prop;
+        }, $properties), fn($prop) => !empty($prop) && $prop !== '}');
     }
 
     protected function processNestedBlocks(string $block): array
@@ -284,8 +290,6 @@ class CssPurger
             return false;
         }
 
-        // Handle multiple selectors joined by space, >, +, ~
-        // We split by these combinators and check if each part is "valid"
         $parts = preg_split('/[\s>+~]+/', $selector, -1, PREG_SPLIT_NO_EMPTY);
         foreach ($parts as $part) {
             if (!$this->checkSingleSelector($part)) {
@@ -298,14 +302,11 @@ class CssPurger
 
     protected function checkSingleSelector(string $selector): bool
     {
-        // Remove pseudo-classes/elements
         if (($pos = strpos($selector, ':')) !== false && $pos > 0) {
             $selector = substr($selector, 0, $pos);
         }
 
-        // Handle multiple classes on same element: .class1.class2
-        // We split by . and check each class
-        if (str_contains($selector, '.') && strlen($selector) > 1 && $selector[0] === '.') {
+        if (strpos($selector, '.') !== false && strlen($selector) > 1 && $selector[0] === '.') {
             $classes = explode('.', ltrim($selector, '.'));
             foreach ($classes as $class) {
                 if (!$this->isSelectorInList('.' . $class)) {
