@@ -3,3 +3,5 @@
 /.git
 /tests/assets/css/bootstrap-purged.css
 /tests/assets/css/bootstrap-purged.min.css
+/tests/assets/css/fontawesome-purged.css
+/tests/assets/css/fontawesome-purged.min.css

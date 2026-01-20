@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FontAwesome Purge Test</title>
+    <link rel="stylesheet" href="assets/css/fontawesome-purged.min.css">
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .icon-container {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .icon-container i {
+            font-size: 24px;
+            color: #333;
+        }
+        .label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>FontAwesome Purge Test</h1>
+    <p>Diese Seite demonstriert die Verwendung der bereinigten FontAwesome CSS-Datei. Nur die unten gezeigten Icons (und die Basis-Klassen) sollten im CSS enthalten sein.</p>
+
+    <div class="icon-container">
+        <i class="fa-solid fa-house"></i>
+        <span class="label">fa-house (Solid)</span>
+    </div>
+
+    <div class="icon-container">
+        <i class="fa-solid fa-user"></i>
+        <span class="label">fa-user (Solid)</span>
+    </div>
+
+    <div class="icon-container">
+        <i class="fa-solid fa-check"></i>
+        <span class="label">fa-check (Solid)</span>
+    </div>
+
+    <div class="icon-container">
+        <i class="fa-solid fa-house fa-lg"></i>
+        <span class="label">fa-house fa-lg (Utility-Klasse Test)</span>
+    </div>
+
+    <hr>
+    <p>Hinweis: Damit die Icons tatsächlich angezeigt werden, müssen die entsprechenden Font-Dateien von FontAwesome im richtigen Verzeichnis (relativ zum CSS) vorhanden sein. Dieser Test prüft primär das Vorhandensein der CSS-Selektoren.</p>
+</body>
+</html>
